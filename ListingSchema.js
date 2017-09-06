@@ -19,7 +19,7 @@ var listingSchema = new Schema({
 
     },
 
-    address: {type: String, required: false, unique: true},
+    address: {type: String, required: false, unique: false},
 
     created_at: Date,
 

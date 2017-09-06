@@ -6,9 +6,9 @@
 var fs = require('fs'),
     mongoose = require('mongoose'),
     Schema = mongoose.Schema,
-    Listing = require('./ListingSchema.js'),
-    config = require('./config');
-
+    Listing = require('./listingSchema.js'),
+    config = require('./config'),
+    entries = require('./listings.json')
 /* Connect to your database */
 
 var database = mongoose.connect('mongodb://nigeldavis:Hotsauce22@ds127994.mlab.com:27994/assignment3');
@@ -17,20 +17,20 @@ var database = mongoose.connect('mongodb://nigeldavis:Hotsauce22@ds127994.mlab.c
   and then save it to your Mongo database
  */
 
- Object.keys(listings).forEach(function(listing) {
+ Object.keys(entries).forEach(function(entry) {
 
-   Object.keys(listings[listing]).forEach(function(type) {
+   Object.keys(entries[entry]).forEach(function(type) {
 
-     //mongoose model for different listings
+     //mongoose model for different entries
      var myListing = Listing({
 
-       code: listings[listing][type].code,
+       code: entries[entry][type].code,
 
-       name: listings[listing][type].name,
+       name: entries[entry][type].name,
 
-       coordinates: listings[listing][type].coordinates,
+       coordinates: entries[entry][type].coordinates,
 
-       address: listings[listing][type].address
+       address: entries[entry][type].address
 
      });
 
