@@ -9,37 +9,30 @@ var fs = require('fs'),
     Listing = require('./listingSchema.js'),
     config = require('./config'),
     entries = require('./listings.json')
-/* Connect to your database */
 
-var database = mongoose.connect('mongodb://nigeldavis:Hotsauce22@ds127994.mlab.com:27994/assignment3');
+/* Connect to your database */
+mongoose.Promise = global.Promise; //updated reference from deprecated Mongoose Promise
+
+mongoose.connect(config.db.uri);
+
+//solves issue with open() call
+{useMongoClient: true};
+
 /*
   Instantiate a mongoose model for each listing object in the JSON file,
   and then save it to your Mongo database
  */
 
- Object.keys(entries).forEach(function(entry) {
+var myListing = fs.readFile('listings.json', 'utf-8', function(err, listings) {
 
-   Object.keys(entries[entry]).forEach(function(type) {
+  if (err) throw err;
 
-     //mongoose model for different entries
-     var myListing = Listing({
+  var parse = JSON.parse(listings);
 
-       code: entries[entry][type].code,
+      //pushes parsed json entries into Listing
+      Listing.insertMany(parse.entries, function (err, data) {
 
-       name: entries[entry][type].name,
+        if (err) throw err;
+      });
 
-       coordinates: entries[entry][type].coordinates,
-
-       address: entries[entry][type].address
-
-     });
-
-     myListing.save(function(err) {
-
-       if (err) throw err;
-
-     });
-
-   });
-
- });
+});
